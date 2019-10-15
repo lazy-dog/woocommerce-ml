@@ -1,9 +1,9 @@
 <?php
 /**
- * Plugin Name: Empty plugin
+ * Plugin Name: WooCommerce ML
  * Plugin URI: 
- * Text Domain: empty-plugin
- * Description: A fresh start
+ * Text Domain: wcml
+ * Description: An imlementation of PHP-ML to WooCommerce
  * Version: 1.0
  * Author: You
  * Author URI: 
@@ -11,7 +11,7 @@
  *
  */
 
-namespace EmptyPlugin;
+namespace WoocommerceMl;
 
 if (!defined('WPINC')) {
     die();
