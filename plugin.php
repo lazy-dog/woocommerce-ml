@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Plugin Name: WooCommerce ML
  * Plugin URI: 
@@ -16,3 +17,8 @@ namespace WoocommerceMl;
 if (!defined('WPINC')) {
     die();
 }
+
+require_once __DIR__ . '/vendor/autoload.php';
+
+new WoocommerceMl;
+
