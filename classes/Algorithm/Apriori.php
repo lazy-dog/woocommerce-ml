@@ -1,24 +1,36 @@
 <?php
 
-namespace WoocommerceMl;
+namespace WoocommerceMl\Algorithm;
 
-class Apriori extends Algorithm implements DataInterface
+use Phpml\Association\Apriori as PhpML_Apriorio;
+
+class Apriori extends Algorithm
 {
-    private $label;
 
-    public function __construct(string $name = 'apriori')
+    public function __construct()
     {
-        $this->label = $name;
+        $this->trainingModel = new PhpML_Apriorio($support = 0.5, $confidence = 0.5);
     }
 
-    public function getLabel()
+     /**
+     * Train model
+     */
+    public function trainModel($trainingData, $labels = [])
     {
-        return $this->label;
+        $this->trainingModel->train($trainingData, $labels);
+        return $this;
     }
 
+    /**
+     * Get prediction
+     */
+    public function predict(array $input)
+    {
+        return $this->trainingModel->predict($input);
+    }
+    
     public function getTrainingData() 
     {
-
         $query = new \WC_Order_Query( array(
             'limit' => -1,
             'orderby' => 'date',
@@ -27,29 +39,22 @@ class Apriori extends Algorithm implements DataInterface
         ));
 
         $orders = $query->get_orders();
-
         $orderSets = []; 
 
         foreach ($orders as $order_id) {
-
             $basket = [];
-
             $order = wc_get_order( $order_id );
-
             foreach( $order->get_items() as $item_id => $item ) {
-
                 $basket[] = $item->get_product_id();
             }
-
             $orderSets[] = $basket;
         }
 
         return $orderSets;
     }
 
-    public function outputTrainingData($trainingData){
-
-        
+    public function outputTrainingData($trainingData)
+    {
         echo '<h2>Basket data</h2>';
         echo '<ol>';
         foreach($trainingData as $ids) {
@@ -64,22 +69,15 @@ class Apriori extends Algorithm implements DataInterface
             echo '</li>';
         }
         echo '</ol>';
-
         echo '<hr>';
-        
     }
 
-    public function outputPrediction($associatedProductIdSets, $product_id){
-
+    public function outputPrediction($associatedProductIdSets, $product_id)
+    {
 
         echo '<h2>Prediction for '.get_the_title($product_id)." (ID:$product_id)".'</h2>';
-
-        
-
         echo '<ul>';
-
         foreach($associatedProductIdSets as $ids) {
-
             foreach($ids as $id) {
                 echo '<li>';
                 echo get_the_title($id)." (ID:$id)";
@@ -88,7 +86,4 @@ class Apriori extends Algorithm implements DataInterface
         }
         echo '</ul>';
     }
-
-    
-
 }
