@@ -7,8 +7,10 @@ use WoocommerceMl\Apriori as WcmlApriori;
 
 class App {
 
-    private $modelLabel;
-    private $model;
+    private $modelLabel;//e.g. apriori
+    private $trainingModel;// PHP-ML Model
+    private $model; //WCML Model
+    private $debug = false;
 
     /**
      * Set the model for the app to use
@@ -16,11 +18,7 @@ class App {
     public function __construct($modelLabel)
     {
         $this->modelLabel = $modelLabel;
-        
-        $this->setModel($modelLabel);
-
-        add_action('init', [$this, 'run']);
-
+        add_action('init', [$this, 'run']); //Wait for WooCommerce to be loaded
     }
 
      /**
@@ -28,61 +26,46 @@ class App {
      */
     public function run()
     {
+        ob_start();
+        //Choose a model
+        $this->setModel($this->modelLabel);
 
-        //Get data specific to model
-        $trainingData = $this->getTrainingData();
+        //Get data to train a model
+        $trainingData = $this->model->getTrainingData();
 
-        echo '<h2>Basket data</h2>';
-        echo '<ol>';
-        foreach($trainingData as $ids) {
-            echo '<li>';
-                echo '<ul>';
-                foreach($ids as $id) {
-                    echo '<li>';
-                    echo get_the_title($id)." (ID:$id)";
-                    echo '</li>';
-                }
-                echo '</ul>';
-            echo '</li>';
-        }
-        echo '</ol>';
+        //Output the data passed to the model
+        $this->model->outputTrainingData($trainingData);
 
-        echo '<hr>';
-
+        //Train the model
         $this->trainModel($trainingData);
 
-        echo '<p>Doing the predictings...</p>';
-
         echo '<hr>';
 
-        $product_id = 21;
+        //Predict
+        $associatedProductIdSets = $this->predict([21]); //Pass product ID
 
-        echo '<h2>Prediction for '.get_the_title($product_id)." (ID:$product_id)".'</h2>';
+        //Output prediction
+        $this->model->outputPrediction($associatedProductIdSets, $product_id);
 
-        $associatedProductIdSets = $this->predict([$product_id]);
+        $output = ob_get_clean();
 
-        echo '<ul>';
-
-        foreach($associatedProductIdSets as $ids) {
-
-            foreach($ids as $id) {
-                echo '<li>';
-                echo get_the_title($id)." (ID:$id)";
-                echo '</li>';
-            }
+        if($this->debug) {
+            echo $output;
         }
-        echo '</ul>';
-        
 
         return;
-        
+    
     }
 
+    /**
+     * Set training model and WCML model
+     */
     public function setModel(string $modelLabel)
     {
         switch ($modelLabel) {
             case 'apriori':
-                $this->model = new Apriori($support = 0.5, $confidence = 0.5);
+                $this->trainingModel = new Apriori($support = 0.5, $confidence = 0.5);
+                $this->model = new WcmlApriori;
                 break;
             
             default:
@@ -92,27 +75,20 @@ class App {
         
     }
 
+    /**
+     * Train model
+     */
     public function trainModel($trainingData, $labels = [])
     {
-        $this->model->train($trainingData, $labels);
+        $this->trainingModel->train($trainingData, $labels);
     }
 
+    /**
+     * Get prediction
+     */
     public function predict(array $input)
     {
-        return $this->model->predict($input);
-    }
-
-    public function getTrainingData()
-    {
-        switch ($this->modelLabel) {
-            case 'apriori':
-                return (new WcmlApriori)->getTrainingData();
-                break;
-            
-            default:
-                # code...
-                break;
-        }
+        return $this->trainingModel->predict($input);
     }
 
 }
