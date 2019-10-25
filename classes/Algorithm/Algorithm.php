@@ -5,6 +5,7 @@ namespace WoocommerceMl\Algorithm;
 abstract class Algorithm
 {
     private $label;
+    protected $outputter;
     protected $trainingModel;// PHP-ML Model
     protected $trainingData;
 

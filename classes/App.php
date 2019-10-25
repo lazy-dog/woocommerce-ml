@@ -2,6 +2,7 @@
 
 namespace WoocommerceMl;
 
+use WoocommerceMl\Outputter\HtmlOutputter;
 use WoocommerceMl\Algorithm\Apriori as WCML_Aproiori;
 
 class App {
@@ -19,11 +20,27 @@ class App {
      */
     public function run()
     {
-        $model = new WCML_Aproiori();
+
+        $model = new WCML_Aproiori(new HtmlOutputter);//Pass outputter class
         $trainingData = $model->getTrainingData();
         $model->trainModel($trainingData);
-        $result = $model->predict([21]);
-        $model->outputPrediction($result, 21);
+        $product_id = 32;
+        $result = $model->predict([$product_id]);
+
+        if(is_admin()) {
+            return;
+        }
+
+
+        $model->outputTrainingData($trainingData);
+
+
+
+        $model->outputPrediction($result, $product_id);
+        echo '<hr>';
+        $product_id = 22;
+        $result = $model->predict([$product_id]);
+        $model->outputPrediction($result, $product_id);
     }
 
 }

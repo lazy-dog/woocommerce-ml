@@ -3,17 +3,19 @@
 namespace WoocommerceMl\Algorithm;
 
 use Phpml\Association\Apriori as PhpML_Apriorio;
+use WoocommerceMl\Outputter\OutputInterface;
 
 class Apriori extends Algorithm
 {
 
-    public function __construct()
+    public function __construct(OutputInterface $outputInterface)
     {
-        $this->trainingModel = new PhpML_Apriorio($support = 0.5, $confidence = 0.5);
+        $this->outputter = $outputInterface;
+        $this->trainingModel = new PhpML_Apriorio($support = 0.1, $confidence = 0.6);
     }
 
      /**
-     * Train model
+     * Train model -- @TODO abstract this
      */
     public function trainModel($trainingData, $labels = [])
     {
