@@ -11,7 +11,7 @@ class Apriori extends Algorithm
     public function __construct(OutputInterface $outputInterface)
     {
         $this->outputter = $outputInterface;
-        $this->trainingModel = new PhpML_Apriorio($support = 0.1, $confidence = 0.6);
+        $this->trainingModel = new PhpML_Apriorio($support = 0.1, $confidence = 0.5);
     }
 
      /**
