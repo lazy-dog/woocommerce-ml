@@ -32,9 +32,9 @@ class App
         $model = new WCML_Aproiori();
 
         //Train model
-        $start = microtime(true);
+        $start_time = microtime(true);
         $model->train();
-        $time_elapsed_secs = microtime(true) - $start;
+        $time_elapsed_secs = microtime(true) - $start_time;
 
         var_dump('Training time: '.$time_elapsed_secs.' seconds');
 
@@ -44,6 +44,10 @@ class App
         $rules = $model->getRules();
         echo 'rules';
         var_dump($rules);
+        echo 'prediction';
+        var_dump($model->predict([26209]));
+
+        echo '<hr>';
 
     }
 

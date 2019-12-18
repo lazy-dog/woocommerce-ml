@@ -9,7 +9,7 @@ class Apriori extends Algorithm
 {
     public function __construct()
     {
-        $this->trainingModel = new PhpML_Apriorio($support = 0.1, $confidence = 0.5);
+        $this->trainingModel = new PhpML_Apriorio(0,0);
     }
 
     public function predict(array $input)
@@ -21,6 +21,7 @@ class Apriori extends Algorithm
     {
         $trainingData = $this->getTrainingData();
         $this->trainModel($trainingData);
+        return $this;
     }
 
     public function getRules()
@@ -40,7 +41,7 @@ class Apriori extends Algorithm
            
             $query = new \WC_Order_Query( 
                 array(
-                    'limit' => 1000,
+                    'limit' => 100,
                     'orderby' => 'date',
                     'order' => 'DESC',
                     'return' => 'ids',
@@ -65,7 +66,7 @@ class Apriori extends Algorithm
         }
 
         $orders = wc_get_orders(array(
-            'limit' => 1000,
+            'limit' => 100,
                 'orderby' => 'date',
                 'order' => 'DESC',
                 'return' => 'ids',

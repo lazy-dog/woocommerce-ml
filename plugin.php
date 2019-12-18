@@ -27,16 +27,10 @@ if (!defined('WPINC')) {
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-
 //Trained on instantiation
-// $start = microtime(true);
-// //phpcs:disable
+
+//phpcs:disable
 $app = new App(); 
-
-// $time_elapsed_secs = microtime(true) - $start;
-
-
-// die('Executed in: '.$time_elapsed_secs.' seconds');
 
 // $prediction = $app->getAssociatedProducts(99324);
 
