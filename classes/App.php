@@ -27,14 +27,23 @@ class App
      */
     public function run()
     {
+
         //Set up Apriori model
         $model = new WCML_Aproiori();
 
         //Train model
+        $start = microtime(true);
         $model->train();
+        $time_elapsed_secs = microtime(true) - $start;
+
+        var_dump('Training time: '.$time_elapsed_secs.' seconds');
 
         //Set model
         $this->setAprioriModel($model);
+
+        $rules = $model->getRules();
+        echo 'rules';
+        var_dump($rules);
 
     }
 

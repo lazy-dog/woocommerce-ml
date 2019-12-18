@@ -23,6 +23,11 @@ class Apriori extends Algorithm
         $this->trainModel($trainingData);
     }
 
+    public function getRules()
+    {
+        return $this->trainingModel->getRules();
+    }
+
     private function trainModel($trainingData, $labels = [])
     {
         $this->trainingModel->train($trainingData, $labels);
@@ -35,7 +40,7 @@ class Apriori extends Algorithm
            
             $query = new \WC_Order_Query( 
                 array(
-                    'limit' => -1,
+                    'limit' => 1000,
                     'orderby' => 'date',
                     'order' => 'DESC',
                     'return' => 'ids',
@@ -60,7 +65,7 @@ class Apriori extends Algorithm
         }
 
         $orders = wc_get_orders(array(
-            'limit' => -1,
+            'limit' => 1000,
                 'orderby' => 'date',
                 'order' => 'DESC',
                 'return' => 'ids',
