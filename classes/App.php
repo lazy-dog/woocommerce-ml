@@ -4,43 +4,67 @@ namespace WoocommerceMl;
 
 use WoocommerceMl\Outputter\HtmlOutputter;
 use WoocommerceMl\Algorithm\Apriori as WCML_Aproiori;
+/**
+ * Main class
+ */
+class App 
+{
 
-class App {
+    private $aprioriModel;
 
     /**
-     * Set the model for the app to use
+     * Constructor
      */
-    public function __construct($modelLabel)
+    public function __construct()
     {
         add_action('init', [$this, 'run']); //Wait for WooCommerce to be loaded
     }
 
-     /**
-     * Do the things!
+    /**
+     * Entry point
+     *
+     * @return void
      */
     public function run()
     {
+        //Set up Apriori model
+        $model = new WCML_Aproiori();
 
-        $model = new WCML_Aproiori(new HtmlOutputter);//Pass outputter class
-        $trainingData = $model->getTrainingData();
-        $model->trainModel($trainingData);
-        $product_id = 32;
-        $result = $model->predict([$product_id]);
+        //Train model
+        $model->train();
 
-        if(is_admin()) {
-            return;
-        }
+        //Set model
+        $this->setAprioriModel($model);
 
-
-        $model->outputTrainingData($trainingData);
-
-
-
-        $model->outputPrediction($result, $product_id);
-        echo '<hr>';
-        $product_id = 22;
-        $result = $model->predict([$product_id]);
-        $model->outputPrediction($result, $product_id);
     }
 
+    public function getAssociatedProducts($product_id)
+    {
+        $model = $this->getAprioriModel();
+        return $model->predict($product_id);
+    }
+
+    /**
+     * Getter
+     * 
+     * Get the value of aprioriModel
+     */ 
+    public function getAprioriModel()
+    {
+        return $this->aprioriModel;
+    }
+
+    /**
+     * Setter
+     * 
+     * Set the value of aprioriModel
+     *
+     * @return self
+     */ 
+    private function setAprioriModel($aprioriModel)
+    {
+        $this->aprioriModel = $aprioriModel;
+
+        return $this;
+    }
 }
