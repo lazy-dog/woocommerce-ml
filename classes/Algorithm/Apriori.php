@@ -9,7 +9,7 @@ class Apriori extends Algorithm
 {
     public function __construct()
     {
-        $this->trainingModel = new PhpML_Apriorio(0.1, 0.1);
+        $this->trainingModel = new PhpML_Apriorio(0.1, 0.5);
     }
 
     public function predict(array $input)

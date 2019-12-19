@@ -24,19 +24,21 @@ class App
 
     public function renderRealtedProductsWidget()
     {
+
+        $start_time = microtime(true);
+
         $product_id = get_queried_object_id();
         $products = $this->getAssociatedProducts([$product_id]);
         $products = Helpers::arrayFlatten($products);
         $product = array_unique($products);
         $products_unique = [];
         foreach ($product as $product_id) {
-            if(!in_array($product_id, $products_unique)) {
+            if (!in_array($product_id, $products_unique)) {
                 $products_unique[] = $product_id;
             }
         }
-        // var_dump($products_unique);
 
-        echo '<hr><div>';
+        echo '<hr><div><h3>You may also like:</h3>';
         foreach ($products_unique as $id) {
             echo '<a href="'.get_the_permalink($id).'">';
             echo get_the_title($id);
@@ -44,6 +46,10 @@ class App
             echo '<br>';
         }
         echo '</div>';
+
+        $time_elapsed_secs = microtime(true) - $start_time;
+
+        var_dump('renderRealtedProductsWidget running time: '.$time_elapsed_secs.' seconds');
     }
 
     /**
@@ -60,23 +66,12 @@ class App
         $model = new WCML_Aproiori();
 
         //Train model
-        $start_time = microtime(true);
         $model->train();
-        $time_elapsed_secs = microtime(true) - $start_time;
-
-        var_dump('Training time: '.$time_elapsed_secs.' seconds');
 
         //Set model
         $this->setAprioriModel($model);
 
-        // $rules = $model->getRules();
-        // echo 'rules';
-        // var_dump($rules);
-        // echo 'prediction';
-        // var_dump($model->predict([26209]));
-
-        echo '<hr>';
-
+        //Now use model! 
     }
 
     public function getAssociatedProducts($product_id)
@@ -89,6 +84,8 @@ class App
      * Getter
      * 
      * Get the value of aprioriModel
+     * 
+     * @return WCML_Apriori 
      */ 
     public function getAprioriModel()
     {

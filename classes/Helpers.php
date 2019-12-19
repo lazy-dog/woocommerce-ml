@@ -56,4 +56,10 @@ class Helpers
         return $result;
     }
 
+    public static function logToConsole(string $text = null)
+    {
+        echo '<script>';
+        echo 'console.log("'.$text.'")';
+        echo '</script>';
+    }
 }

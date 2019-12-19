@@ -25,6 +25,12 @@ if (!defined('WPINC')) {
     die();
 }
 
+$start_time = microtime(true);
+
 require_once __DIR__ . '/vendor/autoload.php';
 
 $app = new App(); 
+
+$time_elapsed_secs = microtime(true) - $start_time;
+
+var_dump('App running time: '.$time_elapsed_secs.' seconds');
