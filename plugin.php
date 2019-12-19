@@ -27,19 +27,4 @@ if (!defined('WPINC')) {
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-//Trained on instantiation
-
-//phpcs:disable
 $app = new App(); 
-
-// $prediction = $app->getAssociatedProducts(99324);
-
-// var_dump($prediction);
-
-// die();
-//phpcs:enable
-
-
-//Register a widget area
-
-//$app->getAssociatedProducts(21);

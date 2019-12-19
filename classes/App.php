@@ -28,6 +28,8 @@ class App
     public function run()
     {
 
+        //Check for existing model - use that if possible
+        
         //Set up Apriori model
         $model = new WCML_Aproiori();
 
