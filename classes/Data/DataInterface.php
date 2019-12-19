@@ -4,8 +4,5 @@ namespace WoocommerceMl\Data;
 
 interface DataInterface
 {
-    getTrainingData()
-    {
-
-    }
+    function getTrainingData();
 }

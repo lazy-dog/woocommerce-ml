@@ -21,16 +21,19 @@
 
 namespace WoocommerceMl;
 
+use Phpml\Association\Apriori;
+use WoocommerceMl\Data\WooCommerceDataInterface;
+
 if (!defined('WPINC')) {
     die();
 }
 
-$start_time = microtime(true);
-
 require_once __DIR__ . '/vendor/autoload.php';
 
-$app = new App(); 
+$options = new Options();//From WP Options table
 
-$time_elapsed_secs = microtime(true) - $start_time;
+$app = new App($options);
 
-var_dump('App running time: '.$time_elapsed_secs.' seconds');
+//@TODO implement queueing for training
+//@TODO implement persistance for trained models
+//@TODO store related products as metadata - needs updating, use a queue 
